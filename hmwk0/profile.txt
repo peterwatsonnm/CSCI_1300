@@ -1,0 +1,10 @@
+——Student Profile——
+
+Name: Peter Watson  
+
+Major/minor: Mechanical Engineering
+
+Programming experience: Worked with bash and shell scripting to create GPIO interface with a Jetson tx2
+
+What do you expect to learn in this course? C++ basics, a foundation on which to build coding skills
+
