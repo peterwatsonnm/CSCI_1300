@@ -30,12 +30,13 @@ else
     print error message
 */
 
-void chessBoard(string letter, int number){
+void chessBoard(char character, int number){
     string allLetters = "a, b, c, d, e, f, g, h";
     string evenWhiteString = "a, c, e, g";               //all the letter values that yield a white square when the number is even
     string oddWhiteString = "b, d, f, h";                //all the letter values that yield a white square when the number is odd
+    string letter(1, character);                        //converts character input to string so that it can be compared to another string
     
-    // checking that the number and letter are on the board.  str1.find(str2)  searches for str2 inside str1, returns "npos" if str2 does not exist in str1
+    // checking that the number and letter are on the board.  allLetters.find(letter) searches for letter inside allLetters, returns "npos" if letter does not exist in allLetters
     if (number > 0 && number < 9 && allLetters.find(letter) != std::string::npos)                      
     {
         if (number % 2 == 0)                                        //check if number is even
@@ -70,6 +71,12 @@ void chessBoard(string letter, int number){
 
 int main(){
     //test case 1  arguments are (‘g’, 5), the function should print black
-    chessBoard("g", 5);
+    chessBoard('g', 5);
+    
+    //test case 2 arguments are (‘A’, 10), the function should print Chessboard squares can only have letters between a-h and numbers between 1-8
+    chessBoard('A', 10);
+    
+    //test case 3 arguments are (‘c’, 4), the function should print white
+    chessBoard('c', 4);
     return 0;
 }
