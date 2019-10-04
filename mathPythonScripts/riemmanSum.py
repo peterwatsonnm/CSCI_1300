@@ -40,13 +40,13 @@ def left_riemann_sum(f, a, b, n):       #define funtion left_riemann_sum, uses p
     return (float(riemannSum))
 
 def f(x):
-    return (15 * math.cos(x ** 2))
+    return ((((4 *x) ** 1 / 2) - ((x ** 2) / 4)) ** 2)
     
 
-print (trap_rule(f, 0, 1, 4))
+#print (trap_rule(f, 0, 1, 4))
 
 # print(trap_rule(f, 0, 1, 4))
-print (mid_rule(f, 0, 1, 4))
+print (mid_rule(f, 0, 4, 10000000))
 #left_riemann_sum(f, 1, 2, 4)
 
 #test = math.log(2)      #log base e

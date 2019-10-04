@@ -18,30 +18,31 @@ for every character in string
 return word count
 */
 
-int wordCount(string str){
+int getWordCount(string str){
   int len = str.length();
-  cout << len << endl;
-  if(len = 0)
+  if(len == 0)
   {
     return 0;
   }
   else
   {
-    cout << "testing1" << endl;
-    int wordCount = 1;      //there is at least 1 word in the string
+    int words = 1;      //there is at least 1 word in the string
     for(int i = 0; i < len; i++)
     {
-      cout << "testing" << endl;
-      cout << str[i] << endl; //testing values
-      if(str[i] = ' ')      //if there is a space, it means there is a new word
+      if(str[i] == ' ')      //if there is a space, it means there is a new word
       {
-        wordCount += 1;
+        words += 1;
       }
     }
-    return wordCount;
+    return words;
   }
 }
 
 int main(){
-  cout << wordCount("a b c") << endl;
+  //test case 1
+  cout << getWordCount("a b c") << endl;
+  //test case 2
+  cout << getWordCount("") << endl;
+  //test case 1
+  cout << getWordCount("a b c hi mom") << endl;
 }
