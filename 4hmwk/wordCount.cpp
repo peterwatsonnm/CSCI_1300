@@ -14,7 +14,7 @@ if string is empty
 word count = 1
 for every character in string
   if character = " "
-    add one to word cout
+    add one to word count
 return word count
 */
 

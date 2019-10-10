@@ -7,7 +7,7 @@ using namespace std;
 #include <iomanip>
 /*Algorithm: swaps the first and last elements of the given array of integers.
 function takes two parameters in the following order:
-An array of integers The number of elements in the array, type ​ int
+An array of integers The number of elements in the array, type  int
 
 store last element in variable lastElem
 set last element equal to first
