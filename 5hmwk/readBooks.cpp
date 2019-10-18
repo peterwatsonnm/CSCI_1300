@@ -71,7 +71,7 @@ int readBooks(string fileName, string arrTitles[], string arrAuthors[], int numB
     string arr1[2 * size];
     
     //check for unexpected values
-     if (!(file1.is_open()))
+    if (!(file1.is_open()))
     {
         return -1;
     }
@@ -81,7 +81,6 @@ int readBooks(string fileName, string arrTitles[], string arrAuthors[], int numB
     }
     
     //loop filling the arrays starting at numBookStored
-    int n = 0;
     while(numBookStored < size && getline(file1, line))
     {
         if (!(line == ""))    //do not process empty lines
