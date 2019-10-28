@@ -1,0 +1,1 @@
+array offset = [row index]*[num columns]+[column index]
