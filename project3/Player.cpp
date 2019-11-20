@@ -13,6 +13,7 @@ using namespace std;
 #include <string>
 #include "Car.h"
 #include "Player.h"
+#include "Engine.h"
 #include <vector>
 
 
@@ -40,18 +41,9 @@ int Player::getDefense(){
 
 }
 int Player::howMuchLoot(){
-
+  return loot;
 }
-string Player::getCarModel(){
-
-}
-string Player::getCarEngine(){
-
-}
-int Player::getCarHorsepower(){
-
-}
-int Player::heal(){
+void Player::heal(){
 
 }
 int Player::harm(int damage){
@@ -64,7 +56,7 @@ int Player::upgradeDefense(int pointsToAdd){
 
 }
 int Player::acquireLoot(int newLoot){
-
+  loot = newLoot;
 }
 int Player::getXPos(){
   return xPos;
@@ -77,4 +69,13 @@ void Player::setXPos(int x){
 }
 void Player::setYPos(int y){
   yPos = y;
+}
+Car Player::getCar(){
+  return nova;
+}
+void Player::setCar(Car newCar){
+  nova = newCar;
+}
+void Player::setEngine(Engine en1){
+  nova.setEngine(en1);
 }

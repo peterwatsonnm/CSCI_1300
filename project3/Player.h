@@ -10,6 +10,7 @@ The player class stores the attributes and actions of Max, who you play.
 using namespace std;
 #include <string>
 #include "Car.h"
+#include "Engine.h"
 #include <vector>
 
 #ifndef PLAYER_H
@@ -22,19 +23,16 @@ private:
   int damage;
   int defense;
   int loot;
-  //Car maxCar;
   int xPos;
   int yPos;
+  Car nova;
 public:
   Player();
   int getHealth();
   int getDamage();
   int getDefense();
   int howMuchLoot();
-  string getCarModel();
-  string getCarEngine();
-  int getCarHorsepower();
-  int heal();
+  void heal();
   int harm(int damage);
   int upgradeDamage(int pointsToAdd);
   int upgradeDefense(int pointsToAdd);
@@ -43,6 +41,9 @@ public:
   int getYPos();
   void setXPos(int x);
   void setYPos(int y);
+  Car getCar();
+  void setCar(Car newCar);
+  void setEngine(Engine en);
 };
 
 #endif

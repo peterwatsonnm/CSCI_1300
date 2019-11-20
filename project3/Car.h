@@ -15,6 +15,7 @@ as well as possibly attack/defensive mods
 
 using namespace std;
 #include <string>
+#include "Engine.h"
 
 #ifndef CAR_H
 #define CAR_H
@@ -25,20 +26,21 @@ private:
   bool engineRuns;
   bool tiresFlat;
   bool isBurning;
-  int horsepower;
-  string engine;
-  string model;
+  Engine motor;
+  double gas;
 public:
   Car();
-  Car(int newHorse, string engine1, string type);
-  int setHorsepower(int newHorse);
-  void setEngine(string newEngine);
+  Car(Engine engine1, double gas);
+  void setGas(double newGas);
+  void breakEngine();
+  void flattenTires();
+  void setFire();
   bool doesEngineRun();
   bool areTiresFlat();
   bool isCarBurning();
-  int getHorsepower();
-  string getEngine();
-  string getModel();
+  double getGas();
+  void setEngine(Engine en1);
+  Engine getEngine();
 };
 
 #endif

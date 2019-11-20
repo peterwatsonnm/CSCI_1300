@@ -24,7 +24,7 @@ private:
   int damage;
   int defense;
   int loot;
-  Car enemyCar;
+  bool isEasy;
 public:
   Enemy();
   Enemy(int newHealth, int newDamage, int newDefense, int newLoot);
@@ -32,13 +32,7 @@ public:
   int getDamage();
   int getDefense();
   int howMuchLoot();
-  string getCarModel();
-  string getCarEngine();
-  int getCarHorsepower();
-  vector<bool> getCarStatus();
-  bool isInCar();
   int harm(int damage);
-  int carInOut(bool state);
 };
 
 #endif
