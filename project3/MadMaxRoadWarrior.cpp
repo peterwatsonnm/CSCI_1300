@@ -6,6 +6,7 @@ using namespace std;
 #include <iostream>
 #include <time.h>
 #include <math.h>
+#include <fstream>
 #include "Player.h"
 #include "Enemy.h"
 #include "Engine.h"
@@ -215,7 +216,46 @@ Player garage(Player max, Tile map[20][40]){
   }
   return max;
 }
-//weird bug with entering garage when going the other direction
+void fightMenu(int enemyHP, Player max){
+  // /*
+  // ram vehicle
+  // shoot at driver
+  //
+  // */
+  //
+  // string userInp;
+  // int difference;
+  // double percent;
+  //
+  // cout << "You downshift to engage your enemy." << endl << endl;
+  // cout << "1. Ram" << endl;
+  // cout << "2. Shoot Driver" << endl;
+  // cout << "3. Shoot at tires" << endl;
+  // getline(cin, userInp);
+  // int input = stoi(userInp);
+  // switch(input){
+  //   case 1:
+  //     //ram enemy car
+  //     if ((max.getCar().getEngine()).getHorsepower() < enemyHP)
+  //     {
+  //       difference = enemyHP - (max.getCar().getEngine()).getHorsepower();
+  //       percent = 100 - difference;   //if enemy has over 100 more hp, attack will do no damage
+  //       if (percent > 0)
+  //       {
+  //
+  //       }
+  //     }
+  //   case 2:
+  //     //shoot at driver
+  //
+  //   case 3:
+  //     //shoot at tires
+  //
+  //   default:
+  //
+  // }
+}
+
 Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDirection){
   //fight max against an enemy warboy, using the following algorithm:
   /*
@@ -243,25 +283,27 @@ Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDir
   int loot;
   int horsepower;
   string userInp;
+  int difference;
+  double percent;
+  int chance;
   bool fighting = true;
   //generate random enemy
   if (isEasy == true)
   {
       loot = (rand() % (110 - 90 + 1)) + 90;
       horsepower = (rand() % (210 - 190 + 1)) + 190;    //generate random hp between 210 and 190
-      Enemy easyEnemy(1,1,1, loot);
-      Engine easyEngine("Clunker", horsepower, 1, 1);
-      Car easyCar(easyEngine, 1);
-
   }
   else //hard Enemy
   {
     loot = (rand() % (300 - 250 + 1)) + 250;
     horsepower = (rand() % (600 - 550 + 1)) + 550;    //generate random hp between 550 and 600
-    Enemy hardEnemy(1,1,1, loot);
-    Engine hardEngine("Clunker", horsepower, 1, 1);
-    Car hardCar(hardEngine, 1);
   }
+
+  //set attributes to tempEnemy
+  Enemy tempEnemy(1, 1, 1, loot);
+  Engine tempEngine("Clunker", horsepower, 1, 1);
+  Car tempCar(tempEngine, 1);
+
   cout << "Engines roar in the distance.  You've come across an enemy convoy. Choose wisely, for your life hangs from your actions." << endl << endl;
   //give indicator of the horsepower of the enemy
   //cout << horsepower << endl << endl;
@@ -293,7 +335,51 @@ Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDir
     }
     else if (userInp == "fight")
     {
+      cout << "You downshift to engage your enemy." << endl << endl;
+      cout << "1. Ram" << endl;
+      cout << "2. Shoot Driver" << endl;
+      cout << "3. Shoot at tires" << endl;
+      getline(cin, userInp);
+      int input = stoi(userInp);
+      switch(input){
+        case 1:
+          //ram enemy car
+          if ((max.getCar().getEngine()).getHorsepower() < tempEngine.getHorsepower())
+          {
+            difference = tempEngine.getHorsepower() - (max.getCar().getEngine()).getHorsepower();
+            percent = 100 - difference;   //if enemy has over 100 more hp, attack will do no damage
+            if (percent > 0)
+            {
+              //as difference increases, percent decreases
+              chance = (rand() % 100) + 1;
+              if (percent >= chance)    //by comparing percent to a random number between 1 and 100, a percentage is achieved
+              {
+                //do standard ram damage etc
+              }
+              else
+              {
+                cout << "You hit them hard, but not enough to get through that tough armour \n \n";
+              }
+            }
+            else
+            {
+              cout << "You couldn't get going fast enough to ram them effectively.  This fight isn't looking so good \n \n";
+            }
+          }
+          break;
 
+        case 2:
+          //shoot at driver
+          break;
+
+        case 3:
+          //shoot at tires
+          break;
+
+        default:
+
+          break;
+      }
     }
     else
     {
@@ -378,9 +464,6 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
     yIncrement = 1;   //positive travel
   }
 
-  //generate direction for passing into fight function
-
-
   maxPosY = max.getYPos();
   maxPosX = max.getXPos();
   if ((max.getCar()).getGas() > 0)    //check if max has gas
@@ -401,7 +484,7 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           i ++;
           max.setYPos(maxPosY + yIncrement); //increment by 1
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          //tempCar.setGas(tempCar.getGas() - (1 / tpg));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosY += yIncrement;
           explore(maxPosX, maxPosY, map);
@@ -457,7 +540,7 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           j ++;
           max.setXPos(maxPosX + xIncrement);
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          //tempCar.setGas(tempCar.getGas() - (1 / tpg));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosX += xIncrement;
           explore(maxPosX, maxPosY, map);
@@ -565,15 +648,20 @@ void menu(){
   */
 
 }
-void fightMenu(){
-  /*
-  ram vehicle
-  flee
-  shoot at driver
-
-  */
-}
 int main(){
+  //print title screen
+  string line = "";
+  ifstream madmax("madmax.txt");
+  if (!(madmax.is_open()))
+  {
+    return 0;
+  }
+  while(getline(madmax, line))
+  {
+    cout << line << endl;
+  }
+  cout << endl << endl;
+
   Tile map[20][40];
   generateMap(map);
   Player max;
