@@ -17,7 +17,7 @@ Engine::Engine(){
   horsepower = 0;
   tilesPerGal = 0;
 }
-Engine::Engine(string name, int hp, int mpg, int price1){
+Engine::Engine(string name, int hp, double mpg, int price1){
   type = name;
   horsepower = hp;
   tilesPerGal = mpg;
@@ -29,7 +29,7 @@ string Engine::getName(){
 int Engine::getHorsepower(){
   return horsepower;
 }
-int Engine::getTPG(){
+double Engine::getTPG(){
   return tilesPerGal;
 }
 int Engine::getPrice(){

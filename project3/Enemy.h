@@ -21,18 +21,14 @@ class Enemy
 {
 private:
   int health;
-  int damage;
-  int defense;
   int loot;
   bool isEasy;
 public:
   Enemy();
-  Enemy(int newHealth, int newDamage, int newDefense, int newLoot);
+  Enemy(int newHealth, int newLoot);
   int getHealth();
-  int getDamage();
-  int getDefense();
   int howMuchLoot();
-  int harm(int damage);
+  void harm(int damage);
 };
 
 #endif

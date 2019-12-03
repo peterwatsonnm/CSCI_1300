@@ -26,36 +26,22 @@ Player::Player(){
   20 damage
   50 health
   */
-  health = 50;
-  damage = 20;
-  defense = 10;
+  health = 205;
   //maxCar.setHorsepower(200);
 }
 int Player::getHealth(){
-
-}
-int Player::getDamage(){
-
-}
-int Player::getDefense(){
-
+  return health;
 }
 int Player::howMuchLoot(){
   return loot;
 }
-void Player::heal(){
-
+void Player::heal(int healthToAdd){
+  health += healthToAdd;
 }
-int Player::harm(int damage){
-
+void Player::harm(int damage){
+  health = health - damage;
 }
-int Player::upgradeDamage(int pointsToAdd){
-
-}
-int Player::upgradeDefense(int pointsToAdd){
-
-}
-int Player::acquireLoot(int newLoot){
+void Player::acquireLoot(int newLoot){
   loot = newLoot;
 }
 int Player::getXPos(){

@@ -17,21 +17,16 @@ bool isEasy;
 Enemy::Enemy(){
 
 }
-Enemy::Enemy(int newHealth, int newDamage, int newDefense, int newLoot){
-
+Enemy::Enemy(int newHealth, int newLoot){
+  health = newHealth;
+  loot = newLoot;
 }
 int Enemy::getHealth(){
-
-}
-int Enemy::getDamage(){
-
-}
-int Enemy::getDefense(){
-
+  return health;
 }
 int Enemy::howMuchLoot(){
-
+  return loot;
 }
-int Enemy::harm(int damage){
-
+void Enemy::harm(int damage){
+  health -= damage;
 }

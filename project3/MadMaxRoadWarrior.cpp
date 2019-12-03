@@ -7,6 +7,8 @@ using namespace std;
 #include <time.h>
 #include <math.h>
 #include <fstream>
+#include <unistd.h>   //for usleep() function
+#include <sstream>    //for istringstream()
 #include "Player.h"
 #include "Enemy.h"
 #include "Engine.h"
@@ -15,11 +17,12 @@ using namespace std;
 
 
 //helper functions
+
 void generateMap(Tile map[20][40]){
   int numHardConvoys = 58;
-  int numEasyConvoys = 36;
+  int numEasyConvoys = 20;
   int numHardGarages = 2;
-  int numEasyGarages = 4;
+  int numEasyGarages = 5;
   int randRow = 0;
   int randColumn = 0;
   //generate random map of 20x40, with 200 easy tiles and 200 hard tiles
@@ -116,6 +119,7 @@ Player garage(Player max, Tile map[20][40]){
   int input = 0;
   bool boughtEngine = false;
   bool isEasy = false;
+  bool done = false;
   int gasInput;
   int gasPrice = 20;  //gas price for hard garages will be 20
   Engine novaEngine = (max.getCar()).getEngine();
@@ -127,85 +131,197 @@ Player garage(Player max, Tile map[20][40]){
     isEasy = true;
   }
   cout << "welcome, traveler.  We are glad to see you back safe from your journey. \n What can we do for you?" << endl << endl;
-  while (input != 6)
+  while (input != 4)
   {
+    cout << "You have " << max.howMuchLoot() << " loot left." << endl;
     cout << "1. Upgrade my engine" << endl;
-    cout << "2. Upgrade my weapons" << endl;
-    cout << "3. Repair my car" << endl;
-    cout << "4. Buy gas" << endl;
-    cout << "5. Ask about rumors" << endl;
-    cout << "6. Leave the garage" << endl;
+    cout << "2. Repair my car" << endl;
+    cout << "3. Buy gas" << endl;
+    cout << "4. Leave the garage" << endl;
 
-    getline(cin, userInp);
+    //loop to make sure that user does not enter a non-integer
+    done = false;
+    while (!done)
+    {
+      getline(cin, userInp);
+
+      //initialize stringstream
+      istringstream stream(userInp);
+
+      //check if input is an integer by seeing if you can stream it into the int variable
+      if (!(stream >> input))
+      {
+        cout << "enter a number \n";
+      }
+      else
+      {
+        done = true;
+      }
+    }
+
     input = stoi(userInp);
     boughtEngine = false; //reset
 
     switch (input)
     {
       case 1:
+      {
         //upgrade engine
 
-        cout << "New engine.  Good choice.  We have just the thing for you." << endl;
-        cout << "Your " << novaEngine.getName() << " is looking bad.  You must drive this Nova hard." << endl;
-        cout << "Here's what we can offer you: " << endl;
+        cout << "New engine.  Good choice.  We have just the thing for you." << endl << endl;
+        usleep(500000);
+        cout << "Your " << novaEngine.getName() << " is looking bad.  You must drive this Nova hard." << endl << endl;
+        usleep(500000);
+        cout << "Here's what we can offer you: " << endl << endl;
+        usleep(500000);
         //print out engine options
         for (int i = 0; i < 5; i++)
         {
-          cout << engines[i].getName() << " with " << engines[i].getHorsepower() << " horsepower.  It will run with " << engines[i].getTPG() << " mpg., and cost " << engines[i].getPrice() << endl;
+          cout << engines[i].getName() << " with " << engines[i].getHorsepower() << " horsepower.  It will run with " << engines[i].getTPG() << " mpg., and cost " << engines[i].getPrice() << endl << endl;
+          usleep(500000);
         }
         cout << "Tell us the name of the engine you want, otherwise, type none:" << endl;
         getline(cin, userInp);
-        //check which one it matches
-        for (int n = 0; n < 5; n++)
-        {
-          if (userInp == engines[n].getName() && max.howMuchLoot() >= engines[n].getPrice())    //check if max can afford the engine
-          {
-            cout << "Good choice.  Give us your money and we'll have it in in a jiffy" << endl;
-            max.acquireLoot(max.howMuchLoot() - engines[n].getPrice());   //subtract price from max's loot
-            max.setEngine(engines[n]);   //set new engine
-            cout << "Your new " << ((max.getCar()).getEngine()).getName() << " is in.  You have " << max.howMuchLoot() << " loot left." << endl;
 
-            boughtEngine = true;
-          }
-
-        }
-        if (boughtEngine == false)
+        if (userInp == max.getCar().getEngine().getName())
         {
-          cout << "Either we do not have that engine or you do not have enough money.  Select again" << endl;
-        }
-        break;
-      case 2:
-        //upgrade weapons
-        break;
-      case 3:
-        //repair Car
-        break;
-      case 4:
-        //buy gas
-        if(isEasy)
-        {
-          gasPrice = 10;  //gas price for easy garages is 10 loot
-        }
-        cout << "The price of gas is " << gasPrice << " loot per gallon. \n" << endl;
-        cout << "Your Nova has " << (max.getCar()).getGas() << " gallons left.  Let's get her filled up. \n How many gallons do you want? \n";
-        getline(cin, userInp);
-        gasInput = stoi(userInp);
-        if (max.howMuchLoot() >= (gasPrice * gasInput)) //if player has enough loot
-        {
-          tempCar.setGas((tempCar.getGas() + gasInput));     //set new gas to original gas + how many new gallons
-          max.setCar(tempCar);    //temp car has all the same characteristics, but now has the updated gas value
-          max.acquireLoot(max.howMuchLoot() - (gasPrice * gasInput));
-          cout << "You've now got " << (max.getCar()).getGas() << " gallons. Use it wisely, this stuff ain't cheap." << endl;
+          //max already has this engine
+          cout << "You already have this engine. \n \n";
         }
         else
         {
-          cout << "What are you trying to pull on us?  You don't have enough loot for that!" << endl;
+          //check which one it matches
+          for (int n = 0; n < 5; n++)
+          {
+            if (userInp == engines[n].getName() && max.howMuchLoot() >= engines[n].getPrice())    //check if max can afford the engine
+            {
+              usleep(500000);
+              cout << "Good choice.  Give us your money and we'll have it in in a jiffy" << endl;
+              max.acquireLoot(max.howMuchLoot() - engines[n].getPrice());   //subtract price from max's loot
+              max.setEngine(engines[n]);   //set new engine
+              usleep(1000000);
+              cout << "Your new " << ((max.getCar()).getEngine()).getName() << " is in.  You have " << max.howMuchLoot() << " loot left." << endl;
+              //max.heal(engines[n].getHorsepower() - max.getHealth()); //update max's max health
+              boughtEngine = true;
+            }
+
+          }
+          if (boughtEngine == false)
+          {
+            cout << "Either we do not have that engine or you do not have enough money.  Select again" << endl;
+          }
         }
         break;
-      case 5:
-        //ask about rumors
+      }
+      case 2:
+      {
+        //repair car
+        int tempDamage = max.getCar().getEngine().getHorsepower() - max.getHealth();  //max's max health is his car's Horsepower
+        if (tempDamage > 0)
+        {
+          cout << "Car repairs cost 1 loot per 5 health points. \n";
+          cout << "You have " << max.howMuchLoot() << " loot." << endl << endl;
+          cout << "You can afford to repair " << (5 * max.howMuchLoot()) << " health points. \n \n";
+          cout << "You can repair up to " << tempDamage << " points \n \n";
+          cout << "How many would you like? \n";
+
+          //loop to make sure that user does not enter a non-integer
+          done = false;
+          while (!done)
+          {
+            getline(cin, userInp);
+
+            //initialize stringstream
+            istringstream stream(userInp);
+
+            //check if input is an integer by seeing if you can stream it into the int variable
+            if (!(stream >> input))
+            {
+              cout << "enter a number \n";
+            }
+            else
+            {
+              done = true;
+            }
+          }
+          int repairs = stoi(userInp);
+          if (repairs <= 5 * max.howMuchLoot())
+          {
+            int surplus = max.getHealth() + repairs;
+            if (surplus > max.getCar().getEngine().getHorsepower())   //if it is not more than max health
+            {
+              //do not overheal max
+              repairs = max.getCar().getEngine().getHorsepower() - max.getHealth();
+              cout << "we'll heal you up to the max, but can't do more than that. \n \n";
+            }
+            max.heal(repairs);
+            max.acquireLoot(max.howMuchLoot() - (repairs / 5));   //charge max
+            cout << "We got her fixed up.  You now have " << max.getHealth() << " health left. \n \n";
+          }
+          else
+          {
+            cout << "You can't afford that. \n \n";
+          }
+        }
+        else
+        {
+          cout << "Your car is in great shape!  No repairs necessary. \n \n";
+        }
         break;
-      case 6:
+      }
+      case 3:
+      {
+        //buy gas
+        if ((max.getCar().getGas()) < 50)
+        {
+          if(isEasy)
+          {
+            gasPrice = 10;  //gas price for easy garages is 10 loot
+          }
+          cout << "The price of gas is " << gasPrice << " loot per gallon. \n" << endl;
+          cout << "Your Nova has " << (max.getCar()).getGas() << " gallons left.  Let's get her filled up. \n How many gallons do you want? \n";
+
+          //loop to make sure that user does not enter a non-integer
+          done = false;
+          while (!done)
+          {
+            getline(cin, userInp);
+
+            //initialize stringstream
+            istringstream stream(userInp);
+
+            //check if input is an integer by seeing if you can stream it into the int variable
+            if (!(stream >> input))
+            {
+              cout << "enter a number \n";
+            }
+            else
+            {
+              done = true;
+            }
+          }
+
+          gasInput = stoi(userInp);
+          if (max.howMuchLoot() >= (gasPrice * gasInput)) //if player has enough loot
+          {
+            tempCar.setGas((tempCar.getGas() + gasInput));     //set new gas to original gas + how many new gallons
+            max.setCar(tempCar);    //temp car has all the same characteristics, but now has the updated gas value
+            max.acquireLoot(max.howMuchLoot() - (gasPrice * gasInput));
+            cout << "You've now got " << (max.getCar()).getGas() << " gallons. Use it wisely, this stuff ain't cheap." << endl;
+          }
+          else
+          {
+            cout << "What are you trying to pull on us?  You don't have enough loot for that!" << endl;
+          }
+        }
+        else
+        {
+          cout << "Your gas tank is already full.\n \n" << endl;
+        }
+
+        break;
+      }
+      case 4:
         //leave garage
         cout << "Safe travels.  Take good care of that Nova of yours." << endl << endl;
         break;
@@ -255,27 +371,8 @@ void fightMenu(int enemyHP, Player max){
   //
   // }
 }
-
 Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDirection){
-  //fight max against an enemy warboy, using the following algorithm:
-  /*
-  Each time you attack, generate a random number between 1 and 20
-  If this number is higher than the enemy’s defense, you inflict your full damage
-  If this number is lower than the enemy’s defense, you inflict  a percent of your full damage, calculated by (Rand #) * (Damage) / (defense)
-  Turn based, IE, you have a turn, then you are attacked by your enemy
-
-  Vehicle combat:
-  If Max’s tile index matches that of an enemy convoy, he can choose to fight it or run from it
-  There will be some sort of indicator as to the strength and speed of the convoy.
-  Max can only outrun a convoy if he is faster than them, Otherwise, when he chooses to run, he will still have to engage them, but be a turn behind.
-  Combat will be turn based
-  You can either disable enemies’ vehicles or kill the enemy inside them
-  Ram vehicle:  Has a chance to pop tires, damage enemy, and/or set vehicle on fire
-  	These chances will be dependant on your car’s horsepower
-  Shoot at driver:
-  	Do damage to the car’s driver based on your damage and their defense
-  	If driver is killed, car crashes and sets on fire
-  */
+  //fight max against an enemy warboy
 
   //initialize random seed
   srand (time(NULL));
@@ -283,36 +380,39 @@ Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDir
   int loot;
   int horsepower;
   string userInp;
-  int difference;
-  double percent;
-  int chance;
   bool fighting = true;
+  bool isPlayerTurn = true;
+  Car maxCar = max.getCar();
+
   //generate random enemy
   if (isEasy == true)
   {
       loot = (rand() % (110 - 90 + 1)) + 90;
-      horsepower = (rand() % (210 - 190 + 1)) + 190;    //generate random hp between 210 and 190
+      horsepower = (rand() % (210 - 170 + 1)) + 170;    //generate random hp between 210 and 170
   }
   else //hard Enemy
   {
     loot = (rand() % (300 - 250 + 1)) + 250;
-    horsepower = (rand() % (600 - 550 + 1)) + 550;    //generate random hp between 550 and 600
+    horsepower = (rand() % (600 - 300 + 1)) + 300;    //generate random hp between 300 and 600
   }
 
   //set attributes to tempEnemy
-  Enemy tempEnemy(1, 1, 1, loot);
+  Enemy tempEnemy(horsepower, loot);    //health will be horsepower
   Engine tempEngine("Clunker", horsepower, 1, 1);
   Car tempCar(tempEngine, 1);
+  //tempEnemy.setHealth(horsepower);    //health will be horsepower
 
   cout << "Engines roar in the distance.  You've come across an enemy convoy. Choose wisely, for your life hangs from your actions." << endl << endl;
+  usleep(500000);
   //give indicator of the horsepower of the enemy
   //cout << horsepower << endl << endl;
   cout << "It looks like your enemy has somewhere between " << horsepower - (rand() % 10) << " and " << horsepower + (rand() % 10) << " horsepower." << endl << endl;
+  usleep(500000);
   cout << "Will you choose to take them on in battle, or flee back to safety? \n \n";
+  cout << "Select 'run' or 'fight' by typing one below: \n";
+  getline(cin, userInp);
   while (fighting == true)
   {
-    cout << "Select 'run' or 'fight' by typing one below: \n";
-    getline(cin, userInp);
     if (userInp == "run")
     {
       //check if your HP is higher than their HP
@@ -328,62 +428,151 @@ Player fight(Player max, Tile map[20][40], bool isEasy, int xDirection, int yDir
       }
       else
       {
-        cout << "You gave it all your poor " << ((max.getCar()).getEngine()).getName() << " had, but it wasn't enough.\n\nYour Nova was overrun by a warboy convoy.  Rest in peace, Max. \n";
-        //end game
-        fighting = false;
+        if (rand() % 100 < 40)    //40% chance to still flee
+        {
+          cout << "Tires smoking, you peeled away from the enemy convoy.\n\nYour " << ((max.getCar()).getEngine()).getName() << " had just enough juice to get away.  Live to fight another day.\n";
+          //update max's position, using int direction to choose which way to run
+          max.setXPos((max.getXPos()) - xDirection);    //x direction will either be 0 or +-1, signed oposite of the direction in which max should run
+          max.setYPos((max.getYPos()) - yDirection);    //y direction will either be 0 or +-1, signed oposite of the direction in which max should run
+          fighting = false;
+        }
+        else
+        {
+          cout << "You gave it all your poor " << ((max.getCar()).getEngine()).getName() << " had, but it wasn't enough.\n\nYour Nova was overrun by the warboy convoy\n \n";
+          isPlayerTurn = false; //player is now a turn behind
+          userInp = "fight";    //set it to fight mode
+          usleep(1000000);
+        }
       }
     }
     else if (userInp == "fight")
     {
-      cout << "You downshift to engage your enemy." << endl << endl;
-      cout << "1. Ram" << endl;
-      cout << "2. Shoot Driver" << endl;
-      cout << "3. Shoot at tires" << endl;
-      getline(cin, userInp);
-      int input = stoi(userInp);
-      switch(input){
-        case 1:
-          //ram enemy car
-          if ((max.getCar().getEngine()).getHorsepower() < tempEngine.getHorsepower())
+        if (isPlayerTurn == true)
+        {
+          cout << "You downshift to engage your enemy." << endl << endl;
+          usleep(1000000);
+          if (maxCar.getEngine().getHorsepower() >= tempEngine.getHorsepower())
           {
-            difference = tempEngine.getHorsepower() - (max.getCar().getEngine()).getHorsepower();
-            percent = 100 - difference;   //if enemy has over 100 more hp, attack will do no damage
-            if (percent > 0)
+            //if maxhp > enemyhp, then max has a 75% chance to do their full Damage
+            //otherwise, they have a 30 % chance to do their full damage
+            if ((rand() % 100 + 1) < 75)    //75% chance
             {
-              //as difference increases, percent decreases
-              chance = (rand() % 100) + 1;
-              if (percent >= chance)    //by comparing percent to a random number between 1 and 100, a percentage is achieved
+              //do Damage
+              tempEnemy.harm((max.getCar().getEngine()).getHorsepower() / 2);  //damage is half of hp
+              cout << "You did " << (max.getCar().getEngine()).getHorsepower() / 2 << " damage. \n \n";
+              cout << "Enemy Health: " << tempEnemy.getHealth() << endl << "Your Health: " << max.getHealth() << endl << endl;
+              usleep(1000000);
+
+              //check if enemy dead
+              if (tempEnemy.getHealth() <= 0)
               {
-                //do standard ram damage etc
-              }
-              else
-              {
-                cout << "You hit them hard, but not enough to get through that tough armour \n \n";
+                fighting = false;
+                cout << "You got them.  Good job" << endl << endl;
+                max.acquireLoot(max.howMuchLoot() + loot);
+                map[max.getYPos()][max.getXPos()].setEnemyConvoy(false);  //enemy is dead
+                map[max.getYPos()][max.getXPos()].setWaste(true);
+                fighting = false;
               }
             }
             else
             {
-              cout << "You couldn't get going fast enough to ram them effectively.  This fight isn't looking so good \n \n";
+              cout << "You hit them hard, but not hard enough to get through that armour. \n \n";
+              usleep(1000000);
             }
           }
-          break;
+          else
+          {
+            if ((rand() % 100 + 1) < 30)    //30% chance
+            {
+              //do Damage
+              tempEnemy.harm((max.getCar().getEngine()).getHorsepower() / 2);  //damage is half of hp
+              cout << "You did " << (max.getCar().getEngine()).getHorsepower() / 2 << " damage. \n \n";
+              cout << "Enemy Health: " << tempEnemy.getHealth() << endl << "Your Health: " << max.getHealth() << endl << endl;
+              usleep(1000000);
 
-        case 2:
-          //shoot at driver
-          break;
+              //check if enemy dead
+              if (tempEnemy.getHealth() <= 0)
+              {
+                cout << "You got them.  Good job" << endl << endl;
+                max.acquireLoot(max.howMuchLoot() + loot);
+                map[max.getYPos()][max.getXPos()].setEnemyConvoy(false);  //enemy is dead
+                map[max.getYPos()][max.getXPos()].setWaste(true);
+                fighting = false;
+              }
+            }
+            else
+            {
+              cout << "You couldn't get going fast enough to ram them effectively.  This fight isn't looking so good. \n \n";
+              usleep(1000000);
 
-        case 3:
-          //shoot at tires
-          break;
+            }
+          }
+          isPlayerTurn = false;
+        }
+        else    //enemy turn
+        {
+          cout << "Your enemy locks it into " << rand() % 3 + 2 << "nd gear and makes a pass at you \n \n";
+          usleep(1000000);
+          if (tempEngine.getHorsepower() > maxCar.getEngine().getHorsepower())
+          {
+            //if enemy hp > maxhp, then enemy has a 75% chance to do their full Damage
+            //otherwise, they have a 30 % chance to do their full damage
+            if ((rand() % 100 + 1) < 75)    //75% chance
+            {
+              //do Damage
+              max.harm((tempCar.getEngine()).getHorsepower() / 2);  //damage is half of hp
+              cout << "You took " << (tempCar.getEngine()).getHorsepower() / 2 << " damage. \n \n";
+              cout << "Enemy Health: " << tempEnemy.getHealth() << endl << "Your Health: " << max.getHealth() << endl << endl;
+              usleep(1000000);
 
-        default:
+              //check if max dead
+              if (max.getHealth() <= 0)
+              {
+                fighting = false;
+                cout << "They got you.  In a firey crash, your Nova slides to its final resting place. " << endl << endl;
+                usleep(2000000);
+                //end game
+              }
+            }
+            else
+            {
+              cout << "They hit you hard, but your Nova can take more than that. \n \n";
+              usleep(1000000);
+            }
+          }
+          else
+          {
+            if ((rand() % 100 + 1) < 30)    //30% chance
+            {
+              //do Damage
+              max.harm((tempCar.getEngine()).getHorsepower() / 2);  //damage is half of hp
+              cout << "You took " << (tempCar.getEngine()).getHorsepower() / 2 << " damage. \n \n";
+              cout << "Enemy Health: " << tempEnemy.getHealth() << endl << "Your Health: " << max.getHealth() << endl << endl;
+              usleep(1000000);
 
-          break;
-      }
+              //check if max dead
+              if (max.getHealth() <= 0)
+              {
+                fighting = false;
+                cout << "They got you.  In a firey crash, your Nova slides to its final resting place." << endl << endl;
+                usleep(2000000);
+                //end game
+              }
+            }
+            else
+            {
+              cout << "They can't get going fast enough to ram you.  Keep fighting! \n \n";
+              usleep(1000000);
+
+            }
+          }
+          isPlayerTurn = true;
+        }
     }
     else
     {
       cout << "You're wasting valuable time \n \n";
+      getline(cin, userInp);
     }
   }
   return max;
@@ -446,7 +635,7 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
   int xIncrement = 0;
   int yIncrement = 0;
   Car tempCar = max.getCar();
-  int tpg = ((max.getCar()).getEngine()).getTPG();
+  double tpg = ((max.getCar()).getEngine()).getTPG();
   if (xIndex < 0)
   {
     xIncrement = -1;   //if the direction of travel is negative, make the increment negative
@@ -500,12 +689,12 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           i ++;
           max.setYPos(maxPosY + yIncrement); //increment by 1
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          tempCar.setGas(double(tempCar.getGas() - (1 / tpg)));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosY += yIncrement;
           explore(maxPosX, maxPosY, map);
           showMap(map, max);
-          max = fight(max, map, (map[maxPosY + yIncrement][maxPosX].getDifficulty()), xIncrement, yIncrement);
+          max = fight(max, map, (map[maxPosY][maxPosX].getDifficulty()), xIncrement, yIncrement);
           //cout << "x: " << xIncrement << " Y: " << yIncrement << endl << endl;
         }
         else  //is a waste tile, increment position to next tile
@@ -513,7 +702,7 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           i ++;
           max.setYPos(maxPosY + yIncrement); //increment by 1
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          tempCar.setGas(double(tempCar.getGas() - (1 / tpg)));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosY += yIncrement;
           explore(maxPosX, maxPosY, map);
@@ -555,12 +744,12 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           j ++;
           max.setXPos(maxPosX + xIncrement);
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          tempCar.setGas(double(tempCar.getGas() - (1 / tpg)));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosX += xIncrement;
           explore(maxPosX, maxPosY, map);
           showMap(map, max);
-          max = fight(max, map, (map[maxPosY][maxPosX + xIncrement].getDifficulty()), xIncrement, yIncrement);
+          max = fight(max, map, (map[maxPosY][maxPosX].getDifficulty()), xIncrement, yIncrement);
           //cout << "x: " << xIncrement << " Y: " << yIncrement << endl << endl;
         }
         else  //is a waste tile, increment position to next tile
@@ -568,7 +757,7 @@ Player drive(Tile map[20][40], Player max, int xIndex, int yIndex){
           j ++;
           max.setXPos(maxPosX + xIncrement);
           //reduce gas
-          tempCar.setGas(tempCar.getGas() - (1 / tpg));
+          tempCar.setGas(double(tempCar.getGas() - (1 / tpg)));
           max.setCar(tempCar);    //tempCar has all the same attributes but now with less gas.
           maxPosX += xIncrement;
           explore(maxPosX, maxPosY, map);
@@ -589,14 +778,21 @@ Player navigate(Tile map[20][40], Player max){
   const string down = "s";
   const string right = "d";
   string arrow;
+  bool isAlive = true;
 
   showMap(map, max);
-  cout << "you have " << (max.getCar()).getGas() << " gallons left." << endl;
+  cout << "you have " << (max.getCar()).getGas() << "/50 gallons left." << endl;
   cout << "you can travel " << (max.getCar()).getGas() * ((max.getCar()).getEngine()).getTPG() << " miles." << endl;
   cout << "You have " << max.howMuchLoot() << " loot left." << endl;
+  cout << "You have " << max.getHealth() << "/" << max.getCar().getEngine().getHorsepower() << " health left." << endl;
   cout << "Press q to quit, use WASD keys to navigate.  Press enter after each selection."<< endl;
-  while(arrow != "q")
+  while(arrow != "q" && max.getHealth() > 0)
   {
+    if (max.howMuchLoot() >= 1000)  //player wins
+    {
+      cout << "Congrats!  You have at least 1000 loot and have won the game.  The airship is already on the way to pick you up out of the wasteland. \n \n";
+      break;
+    }
     if ((max.getCar()).getGas() > 0)
     {
       getline(cin, arrow);
@@ -619,16 +815,26 @@ Player navigate(Tile map[20][40], Player max){
       else if (arrow == "q")
       {
         cout << "Done navigating. Good luck on your journey." << endl;
+        max.harm(max.getHealth());  //terminate game
         break;
       }
       else
       {
         cout << "invalid key" << endl;
       }
-      showMap(map, max);
-      cout << "you have " << (max.getCar()).getGas() << " gallons left." << endl;
-      cout << "you can travel " << (max.getCar()).getGas() * ((max.getCar()).getEngine()).getTPG() << " miles." << endl;
-      cout << "You have " << max.howMuchLoot() << " loot left." << endl;
+      if (max.getHealth() <= 0)
+      {
+        isAlive = false;    //max is dead
+      }
+      if (isAlive == true)
+      {
+        showMap(map, max);
+        cout << "you have " << (max.getCar()).getGas() << "/50 gallons left." << endl;
+        cout << "you can travel " << (max.getCar()).getGas() * ((max.getCar()).getEngine()).getTPG() << " miles." << endl;
+        cout << "You have " << max.howMuchLoot() << " loot left." << endl;
+        cout << "You have " << max.getHealth() << "/" << max.getCar().getEngine().getHorsepower() << " health left." << endl;
+        cout << "You have " << max.getCar().getEngine().getHorsepower() << " horsepower." << endl;
+      }
     }
     else
     {
@@ -648,36 +854,77 @@ void menu(){
   */
 
 }
-int main(){
-  //print title screen
+int printAscii(string filename){
   string line = "";
-  ifstream madmax("madmax.txt");
-  if (!(madmax.is_open()))
+  ifstream file(filename);
+  if (!(file.is_open()))
   {
     return 0;
   }
-  while(getline(madmax, line))
+  while(getline(file, line))
   {
     cout << line << endl;
   }
   cout << endl << endl;
+  file.close();
+  usleep(2000000);
+  return 1;
+}
+int main(){
+  //print title screen
+  printAscii("madmax.txt");
+  cout << "Written by Peter Watson \n \n";
+  cout << "You are Max.  Your goal:  Survive. \n \n";
+  usleep(2000000);
+  cout << "Your car, the trusty Nova, has 205 horsepower with your current engine. \n \n";
+  //usleep(2000000);
+  printAscii("interceptor.txt");
+  cout << "You must wander the wastes, searching for enemies (E) to fight, and garages (G) to support you. \n \n";
+  usleep(2000000);
+  cout << "Battles can be won with horsepower: Generaly, those with greater horsepower will overcome in a fight. \n \n";
+  usleep(2000000);
+  cout << "Garages can provide you with healing, engine upgrades, and gas, all at a price. \n \n";
+  usleep(2000000);
+  cout << "The game ends when you have 1000 loot, enough to buy an airship ticket out of the wastes. Loot is aquired by fighting enemies. \n \n";
+  usleep(2000000);
+  cout << "You start in the easy zone of the map, move northward to encounter harder enemies-- with greater rewards. \n \n";
+  usleep(2000000);
+  cout << "Use WASD to move, pressing enter after each selection. \n \n";
+  usleep(2000000);
+  cout << "Good luck on your journey. \n \n";
+  usleep(2000000);
 
   Tile map[20][40];
   generateMap(map);
   Player max;
-  Engine sbf("Small Block Ford", 220, 1, 220);
-  Car charger(sbf, 4000);
+  Engine sbf("Small Block Ford", 205, 1, 205);
+  Car charger(sbf, 40);
   max.setCar(charger);
-  max.acquireLoot(4000);
+  max.acquireLoot(250);
   max.setXPos(3);
   max.setYPos(15);
   explore(max.getXPos(), max.getYPos(), map);
-  //showMap(map, max);
-  //fight(max, map, true, -1, 1);
-  max = navigate(map, max);   //returns max with the new position
 
-  //max = garage(max, map);
+  //run game until max's health is 0 or max has 1000 loot or max is out of gas
+  while (max.getHealth() > 0 && max.howMuchLoot() < 1000 && max.getCar().getGas() > 0)
+  {
+      max = navigate(map, max);   //returns max with the new position
+  }
 
-
+  //write max's stats to a file
+  cout << endl << "Your stats for this game have been written to the file stats.txt \n \n";
+  ofstream file1;
+  file1.open("stats.txt");
+  if (!(file1.is_open()))
+  {
+    cout << "Aborted \n";
+    return 0;
+  }
+  file1 << "Max's stats for this game: \n \n";
+  file1 << "Engine: " << max.getCar().getEngine().getName() << endl << endl;
+  file1 << "Horsepower: " << max.getCar().getEngine().getHorsepower() << endl << endl;
+  file1 << "Loot: " << max.howMuchLoot() << endl << endl << endl;
+  file1.close();
+  cout << "Thank you for playing. \n";
   return 0;
 }

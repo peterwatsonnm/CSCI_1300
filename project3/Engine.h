@@ -13,14 +13,14 @@ class Engine
 private:
   string type;
   int horsepower;
-  int tilesPerGal;
+  double tilesPerGal;
   int price;
 public:
   Engine();
-  Engine(string name, int hp, int mpg, int price1);
+  Engine(string name, int hp, double mpg, int price1);
   string getName();
   int getHorsepower();
-  int getTPG();
+  double getTPG();
   int getPrice();
 };
 

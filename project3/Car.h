@@ -23,24 +23,18 @@ using namespace std;
 class Car
 {
 private:
-  bool engineRuns;
-  bool tiresFlat;
-  bool isBurning;
   Engine motor;
   double gas;
+  int health;
 public:
   Car();
   Car(Engine engine1, double gas);
   void setGas(double newGas);
-  void breakEngine();
-  void flattenTires();
-  void setFire();
-  bool doesEngineRun();
-  bool areTiresFlat();
-  bool isCarBurning();
   double getGas();
   void setEngine(Engine en1);
   Engine getEngine();
+  void setHealth(int newh);
+  int getHealth();
 };
 
 #endif

@@ -23,24 +23,6 @@ Car::Car(Engine engine1, double gas1){
 void Car::setGas(double newGas){
   gas = newGas;
 }
-void Car::breakEngine(){
-
-}
-void Car::flattenTires(){
-
-}
-void Car::setFire(){
-
-}
-bool Car::doesEngineRun(){
-
-}
-bool Car::areTiresFlat(){
-
-}
-bool Car::isCarBurning(){
-
-}
 double Car::getGas(){
   return gas;
 }
@@ -49,4 +31,12 @@ void Car::setEngine(Engine en1){
 }
 Engine Car::getEngine(){
   return motor;
+}
+void Car::setHealth(int newh)
+{
+  health = newh;
+}
+int Car::getHealth()
+{
+  return health;
 }

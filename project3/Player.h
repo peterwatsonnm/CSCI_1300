@@ -20,8 +20,6 @@ class Player
 {
 private:
   int health;
-  int damage;
-  int defense;
   int loot;
   int xPos;
   int yPos;
@@ -29,14 +27,10 @@ private:
 public:
   Player();
   int getHealth();
-  int getDamage();
-  int getDefense();
   int howMuchLoot();
-  void heal();
-  int harm(int damage);
-  int upgradeDamage(int pointsToAdd);
-  int upgradeDefense(int pointsToAdd);
-  int acquireLoot(int newLoot);
+  void heal(int healthToAdd);
+  void harm(int damage);
+  void acquireLoot(int newLoot);
   int getXPos();
   int getYPos();
   void setXPos(int x);
